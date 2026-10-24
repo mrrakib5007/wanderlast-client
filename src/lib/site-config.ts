@@ -1,6 +1,6 @@
 // Global site config for SEO metadata (robots, sitemap, OG URLs).
 // TODO: deploy er somoy real production domain boshan.
-export const SITE_URL = "https://wanderlust-go.vercel.app";
+export const SITE_URL = "https://wanderlast-go.vercel.app";
 
 export const SITE_NAME = "Wanderlast";
 

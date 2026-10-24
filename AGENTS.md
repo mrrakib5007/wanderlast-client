@@ -1,4 +1,4 @@
-# Project: Wanderlust (Client)
+# Project: Wanderlast (Client)
 
 Travel journal/blog application — Next.js frontend in `client/`.
 

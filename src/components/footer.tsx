@@ -33,7 +33,7 @@ const linkColumns = [
 
 const contact = {
   phone: "890 123 4567",
-  email: "info@wanderlustgo.com",
+  email: "info@wanderlastgo.com",
 };
 
 const socials = [

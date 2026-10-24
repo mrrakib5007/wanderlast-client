@@ -28,7 +28,7 @@ export function WhyChooseUs() {
       <div className="mx-auto max-w-7xl px-4">
         {/* Heading */}
         <h2 className="font-josefin text-center text-4xl text-slate-800 sm:text-5xl">
-          Why Choose Wanderlust
+          Why Choose Wanderlast
         </h2>
         <p className="mt-3 text-center text-sm text-slate-500">
           Your trusted partner for exceptional travel experiences
