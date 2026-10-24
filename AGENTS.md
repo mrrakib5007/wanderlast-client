@@ -42,6 +42,12 @@ Loaded via `next/font/google` in `src/app/layout.tsx`, exposed as CSS variables 
 - Utility classes via `@apply` allowed inside `@layer base`
 - `--font-mono` was removed (was pointing to unloaded Geist Mono); Tailwind's default mono stack applies
 
+## Build Verification (MANDATORY)
+
+- **After completing any work, ALWAYS verify there are no build errors before reporting done.**
+- Minimum check: `npx tsc --noEmit` (types/components). For page/UI render issues also run `npm run build` when feasible.
+- Do not consider a task finished with failing typecheck/build output.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
