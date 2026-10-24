@@ -79,7 +79,7 @@ export function Banner() {
         ))}
         <button
           type="button"
-          className="col-span-2 bg-cyan-500 px-4 py-3.5 text-sm font-medium text-white transition-colors hover:bg-cyan-600 lg:col-span-1 lg:py-4"
+          className="col-span-2 cursor-pointer bg-cyan-500 px-4 py-3.5 text-sm font-medium text-white transition-colors hover:bg-cyan-600 lg:col-span-1 lg:py-4"
         >
           Search
         </button>

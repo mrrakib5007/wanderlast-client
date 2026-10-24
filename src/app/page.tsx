@@ -1,6 +1,7 @@
 import { Banner } from "@/components/banner";
 import { WhyChooseUs } from "@/components/why-choose-us";
 import { Testimonials } from "@/components/testimonials";
+import { CTA } from "@/components/cta";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <Banner />
       <WhyChooseUs />
       <Testimonials />
+      <CTA />
     </main>
   );
 }
