@@ -171,7 +171,11 @@ export default function DestinationExplorer({
               title={destination.destinationName || "Untitled destination"}
               duration={destination.duration || "Duration varies"}
               price={getPrice(destination)}
-              bookUrl="#"
+              bookUrl={
+                destination._id || destination.id
+                  ? `/destinations/${encodeURIComponent(String(destination._id ?? destination.id))}`
+                  : "#"
+              }
               loading={index === 0 ? "eager" : "lazy"}
             />
           ))}

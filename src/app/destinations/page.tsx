@@ -7,7 +7,7 @@ export default async function Destinations() {
     throw new Error("NEXT_PUBLIC_API_URL is not configured.");
   }
 
-  const response = await fetch(`${apiUrl}/destination`, { cache: "no-store" });
+  const response = await fetch(`${apiUrl}/destinations`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error(`Could not load destinations (HTTP ${response.status}).`);
