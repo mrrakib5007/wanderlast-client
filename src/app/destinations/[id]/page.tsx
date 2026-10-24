@@ -1,6 +1,9 @@
+"use client";
+
+import { use, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import {
   ArrowRight,
   Calendar,
@@ -12,49 +15,97 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
+import Swal from "sweetalert2";
+import DestinationEditDialog, {
+  Destination,
+} from "@/components/cards/DestinationEditDialog";
+import DestinationDeleteDialog from "@/components/cards/DestinationDeleteDialog";
+import Loading from "./loading";
 
-interface Destination {
-  _id: string;
-  destinationName?: string;
-  country?: string;
-  category?: string;
-  price?: number | string;
-  duration?: string;
-  departureDate?: string;
-  imageUrl?: string;
-  description?: string;
-}
-
-export default async function DestinationDetailsPage({
+export default function DestinationDetailsPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const { id } = use(params);
+  const router = useRouter();
 
-  if (!apiUrl) {
-    throw new Error("NEXT_PUBLIC_API_URL is not configured.");
+  const [destination, setDestination] = useState<Destination | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (!apiUrl) return;
+
+    fetch(`${apiUrl}/destination/${encodeURIComponent(id)}`, {
+      cache: "no-store",
+    })
+      .then((res) => {
+        if (res.status === 404) notFound();
+        if (!res.ok) throw new Error("Failed to fetch destination");
+        return res.json();
+      })
+      .then((result) => {
+        if (!result?.data) notFound();
+        setDestination(result.data);
+      })
+      .catch(() => notFound())
+      .finally(() => setLoading(false));
+  }, [id, isEditOpen]);
+
+  async function handleConfirmDelete() {
+    try {
+      setIsDeleting(true);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/destination/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const contentType = res.headers.get("content-type") || "";
+      let result = null;
+      if (contentType.includes("application/json")) {
+        result = await res.json();
+      }
+
+      if (!res.ok) {
+        throw new Error(result?.message || "Failed to delete package.");
+      }
+
+      setIsDeleteOpen(false);
+
+      await Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: result?.message || "The destination package has been removed.",
+        confirmButtonColor: "#0ea5e9",
+      });
+
+      router.push("/destinations");
+    } catch (error: unknown) {
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong while deleting.",
+        confirmButtonColor: "#0ea5e9",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
-  const response = await fetch(
-    `${apiUrl}/destination/${encodeURIComponent(id)}`,
-    { cache: "no-store" },
-  );
-
-  if (response.status === 404) {
-    notFound();
-  }
-  if (!response.ok) {
-    throw new Error(`Could not load destination (HTTP ${response.status}).`);
+  if (loading) {
+    return <Loading />;
   }
 
-  const result = await response.json();
-  const destination = result?.data as Destination | undefined;
-
-  if (!destination || typeof destination !== "object") {
-    notFound();
-  }
+  if (!destination) return null;
 
   const price = Number(destination.price);
   const formattedPrice = Number.isFinite(price) ? price.toLocaleString() : "—";
@@ -106,17 +157,19 @@ export default async function DestinationDetailsPage({
           </ol>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link
-            href={`/destinations/${id}/edit`}
-            className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+        <div className="flex w-full items-center gap-3 sm:w-auto">
+          <button
+            type="button"
+            onClick={() => setIsEditOpen(true)}
+            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 sm:flex-initial"
           >
             <Edit className="size-3.5" />
             <span>Edit</span>
-          </Link>
+          </button>
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 rounded-md border border-red-200 bg-white px-3.5 py-1.5 text-sm font-medium text-red-500 shadow-sm transition-colors hover:bg-red-50 hover:border-red-300"
+            onClick={() => setIsDeleteOpen(true)}
+            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-md border border-red-200 bg-white px-3.5 py-1.5 text-sm font-medium text-red-500 shadow-sm transition-colors hover:border-red-300 hover:bg-red-50 sm:flex-initial"
           >
             <Trash2 className="size-3.5" />
             <span>Cancel</span>
@@ -204,8 +257,12 @@ export default async function DestinationDetailsPage({
             </div>
             <p className="text-xs text-slate-400">per person</p>
 
-            <div className="mt-6 rounded-md bg-slate-50 px-3.5 py-3 text-center text-xs font-medium text-slate-700 border border-slate-100">
-              {destination.departureDate}
+            <div className="mt-6">
+              <input
+                type="input"
+                defaultValue={destination.departureDate || ""}
+                className="w-full rounded-md border border-slate-200 bg-slate-100 px-3.5 py-3 text-sm font-medium text-slate-700 outline-none"
+              />
             </div>
 
             <button
@@ -233,6 +290,20 @@ export default async function DestinationDetailsPage({
           </div>
         </div>
       </div>
+
+      <DestinationEditDialog
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        destination={destination}
+      />
+
+      <DestinationDeleteDialog
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title={destination.destinationName}
+        isDeleting={isDeleting}
+      />
     </main>
   );
 }
