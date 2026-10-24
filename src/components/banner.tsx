@@ -13,9 +13,12 @@ const HERO_IMAGE = "/banner.png";
 export function Banner() {
   return (
     <section
-      // Height = full screen minus navbar (h-14 = 3.5rem), so
-      // navbar + banner together fill the viewport exactly.
-      className="relative flex h-[calc(100svh-3.5rem)] min-h-120 flex-col"
+      // Desktop: full screen minus navbar (h-14 = 3.5rem) so navbar +
+      // banner fill the viewport exactly.
+      // Mobile (<lg): height auto — content (hero + stacked search
+      // strip) can be taller than the viewport, so the strip must be
+      // allowed to stay INSIDE the banner instead of overflowing it.
+      className="relative flex min-h-120 flex-col lg:h-[calc(100svh-3.5rem)]"
       style={{
         backgroundImage: `url('${HERO_IMAGE}')`,
         backgroundSize: "cover",
@@ -23,7 +26,7 @@ export function Banner() {
       }}
     >
       {/* Hero content */}
-      <div className="flex flex-1 flex-col items-center justify-center px-4 py-20 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center px-4 py-10 text-center sm:py-20">
         <h1 className="font-josefin max-w-3xl text-5xl font-bold leading-tight text-white sm:text-6xl lg:text-7xl">
           Discover Your Next Adventure
         </h1>
@@ -35,14 +38,14 @@ export function Banner() {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <a
             href="#"
-            className="inline-flex h-10 items-center gap-2 rounded-none bg-cyan-500 px-5 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-cyan-600"
+            className="inline-flex h-10 w-44 items-center justify-center gap-2 rounded-none bg-cyan-500 px-5 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-cyan-600"
           >
             Explore Now
             <ArrowRight className="size-4" />
           </a>
           <a
             href="#"
-            className="inline-flex h-10 items-center rounded-none bg-white/25 px-6 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-sm transition-colors hover:bg-white/35"
+            className="inline-flex h-10 w-44 items-center justify-center rounded-none bg-white/25 px-6 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-sm transition-colors hover:bg-white/35"
           >
             View Destination
           </a>
@@ -50,14 +53,15 @@ export function Banner() {
       </div>
 
       {/* Search strip — banner image shows through (translucent cells),
-          Search button stays solid */}
+          Search button stays solid.
+          Mobile: 2-col grid + full-width button; lg: 5 equal cells */}
       <form
-        className="grid w-full grid-cols-1 border-t border-white/20 sm:grid-cols-2 lg:grid-cols-5"
+        className="grid w-full grid-cols-2 border-t border-white/20 lg:grid-cols-5"
       >
         {searchFields.map((field, index) => (
           <div
             key={field.label}
-            className="flex flex-col gap-0.5 border-r border-white/20 bg-slate-600/60 px-4 py-2.5 text-white last:border-r-0 sm:max-lg:border-b sm:max-lg:odd:border-l sm:max-lg:nth-last-2:border-r-0 lg:last:border-r"
+            className="flex flex-col gap-0.5 border-r border-b border-white/20 bg-slate-600/60 px-4 py-2.5 text-white max-lg:odd:border-r-0 lg:border-b-0"
           >
             <label
               htmlFor={`banner-search-${index}`}
@@ -75,7 +79,7 @@ export function Banner() {
         ))}
         <button
           type="button"
-          className="bg-cyan-500 px-4 py-4 text-sm font-medium text-white transition-colors hover:bg-cyan-600"
+          className="col-span-2 bg-cyan-500 px-4 py-3.5 text-sm font-medium text-white transition-colors hover:bg-cyan-600 lg:col-span-1 lg:py-4"
         >
           Search
         </button>
