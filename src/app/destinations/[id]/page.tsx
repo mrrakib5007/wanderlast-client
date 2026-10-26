@@ -45,7 +45,7 @@ export default function DestinationDetailsPage({
     })
       .then((res) => {
         if (res.status === 404) notFound();
-        if (!res.ok) throw new Error("Failed to fetch destination");
+        if (!res.ok) throw new Error("Failed to fetch destination details");
         return res.json();
       })
       .then((result) => {
@@ -73,7 +73,7 @@ export default function DestinationDetailsPage({
       }
 
       if (!res.ok) {
-        throw new Error(result?.message || "Failed to delete package.");
+        throw new Error(result?.message || "Failed to delete");
       }
 
       setIsDeleteOpen(false);
