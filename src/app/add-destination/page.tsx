@@ -186,7 +186,7 @@ export default function AddDestinationPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/destination`,
+        `${process.env.BETTER_AUTH_API_URL}/destination`,
         {
           method: "POST",
           headers: {

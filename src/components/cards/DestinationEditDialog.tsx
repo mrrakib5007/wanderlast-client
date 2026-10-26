@@ -76,7 +76,9 @@ export default function DestinationEditDialog({
     category: destination.category?.toLowerCase() || "",
     price: destination.price?.toString() || "",
     duration: destination.duration || "",
-    departureDate: destination.departureDate ? destination.departureDate.slice(0, 10) : "",
+    departureDate: destination.departureDate
+      ? destination.departureDate.slice(0, 10)
+      : "",
     imageUrl: destination.imageUrl || "",
     description: destination.description || "",
   });
@@ -96,7 +98,9 @@ export default function DestinationEditDialog({
   }
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -140,14 +144,14 @@ export default function DestinationEditDialog({
     try {
       setIsSubmitting(true);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/destination/${destination._id}`,
+        `${process.env.BETTER_AUTH_API_URL}/destination/${destination._id}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       const contentType = res.headers.get("content-type") || "";
@@ -210,7 +214,11 @@ export default function DestinationEditDialog({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col flex-1 overflow-hidden">
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="flex flex-col flex-1 overflow-hidden"
+        >
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
             <div>
               <label htmlFor="edit-destinationName" className={labelClass}>

@@ -1,10 +1,10 @@
 import DestinationExplorer from "@/components/destination-explorer";
 
 export default async function Destinations() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl = process.env.BETTER_AUTH_API_URL;
 
   if (!apiUrl) {
-    throw new Error("NEXT_PUBLIC_API_URL is not configured.");
+    throw new Error("BETTER_AUTH_API_URL is not configured.");
   }
 
   const response = await fetch(`${apiUrl}/destinations`, { cache: "no-store" });

@@ -37,7 +37,7 @@ export default function DestinationDetailsPage({
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const apiUrl = process.env.BETTER_AUTH_API_URL;
     if (!apiUrl) return;
 
     fetch(`${apiUrl}/destination/${encodeURIComponent(id)}`, {
@@ -60,10 +60,10 @@ export default function DestinationDetailsPage({
     try {
       setIsDeleting(true);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/destination/${id}`,
+        `${process.env.BETTER_AUTH_API_URL}/destination/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       const contentType = res.headers.get("content-type") || "";
